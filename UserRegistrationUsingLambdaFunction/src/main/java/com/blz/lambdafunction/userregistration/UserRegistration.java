@@ -1,118 +1,99 @@
 package com.blz.lambdafunction.userregistration;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UserRegistration
 {
-	public String validFirstName(String fname) throws Exception
+	public static final String NAME_PATTERN = "^[A-Z][a-z]{2,}$";
+	public static final String EMAIL_ADDRESS_PATTERN = "^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]+.[a-zA-Z]{2,4}([.][a-zA-Z]{2,4})?$";
+	public static final String MOBILE_NUMBER_PATTERN = "^(91){1}[ ][6-9]{1}[0-9]{9,9}$";
+	public static final String PASSWORD_PATTERN = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
+	
+	//Using Lambda Function
+	UserRegistrationInterface obj = (patternDetails, value) -> {
+		Pattern p = Pattern.compile(patternDetails);
+		Matcher m = p.matcher(value);
+		return m.matches();
+	};
+	
+	//First Name Exception
+	public boolean validFirstName(String fName) throws InvalidFirstNameException
 	{
-		String regex = "^[A-Z][a-z]{2,}$";
-		Pattern p = Pattern.compile(regex);
 		try
 		{
-			if(p.matcher(fname).matches())
-				return "VALID";
+			if(obj.validate(NAME_PATTERN, fName)) {
+				return true;
+			}
+			else {
+				throw new InvalidFirstNameException("Invalid first name..!Try again");
+			}
 		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid First Name, try again");
+			throw new InvalidFirstNameException("Invalid first name..!Try again");
 		}
-		return "INVALID";
 	}
 	
-	public String validLastName(String lname) throws Exception
+	//Last Name Exception
+	public boolean validLastName(String LName) throws InvalidLastNameException
 	{
-		String regex = "^[A-Z][a-z]{2,}$";
-		Pattern p = Pattern.compile(regex);
 		try
 		{
-			if(p.matcher(lname).matches())
-				return "VALID";
+			if(obj.validate(NAME_PATTERN, LName)) {
+				return true;
+			}
+			else {
+				throw new InvalidLastNameException("Invalid last name..!Try again");
+			}
 		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid Last Name, try again");
+			throw new InvalidLastNameException("Invalid last name..!Try again");
 		}
-		return "INVALID";
 	}
 	
-	public String validEmailAddress(String email) throws Exception
+	//Email Exception
+	public boolean validEmailAddress(String email) throws InvalidateEmailException
 	{
-		String regex = "^[A-Za-z0-9+_.]+@[A-Za-z0-9+_.]+$";
-		Pattern p = Pattern.compile(regex);
-		try
-		{
-			if(p.matcher(email).matches())
-				return "VALID";
-		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid Email address, try again");
+		try {
+			if(obj.validate(EMAIL_ADDRESS_PATTERN,email)) {
+				return true;
+			}
+			else {
+				throw new InvalidateEmailException("Enter a valid email Id");
+			}
 		}
-		return "INVALID";
+		catch(Exception e) {
+			throw new InvalidateEmailException("Enter a valid email Id");	
+		}	
 	}
 	
-	public String validMobileNumber(String phno) throws Exception
+	//Mobile Number Exception
+	public boolean validMobileNumber(String phno) throws InvalidMobileNumberException
 	{
-		String regex = "^(91){1}[ ][6-9]{1}[0-9]{9,9}$";
-		Pattern p = Pattern.compile(regex);
 		try
 		{
-			if(p.matcher(phno).matches())
-				return "VALID";
+			if(obj.validate(MOBILE_NUMBER_PATTERN, phno)) {
+				return true;
+			}
+			else {
+				throw new InvalidMobileNumberException("Invalid mobile number..!Try again");
+			}
 		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid Mobile Number, try again");
+			throw new InvalidMobileNumberException("Invalid mobile number..!Try again");
 		}
-		return "INVALID";
 	}
-
-	public String validPasswordRule1(String pswd) throws Exception
+	
+	//Password Exception
+	public boolean validPassword(String pswd) throws InvalidPasswordException
 	{
-		String regex = "^[a-zA-Z0-9@#!_]{8,}$";
-		Pattern p = Pattern.compile(regex);
 		try
 		{
-			if(p.matcher(pswd).matches())
-				return "VALID";
-		} catch(Exception e) {
-			throw new InvalidUserDetailsException("Invalid Password, try again");
-		}
-		return "INVALID";
-	}
-
-	public String validPasswordRule2(String pswd) throws Exception
-	{
-		String regex = "^[a-zA-Z0-9@#!_][A-Z]{1}[a-zA-Z0-9@#!_]{7,}$";
-		Pattern p = Pattern.compile(regex);
-		try
-		{
-			if(p.matcher(pswd).matches())
-				return "VALID";
-		} catch(Exception e) {
-			throw new InvalidUserDetailsException("Invalid Password, try again");
-		}
-		return "INVALID";
-	}
-
-	public String validPasswordRule3(String pswd) throws Exception
-	{
-		String regex = "^[a-zA-Z0-9@#!_]{6,}[A-Z]{1}[0-9]{1}[a-zA-Z0-9]$";
-		Pattern p = Pattern.compile(regex);
-		try
-		{
-			if(p.matcher(pswd).matches())
-				return "VALID";
+			if(obj.validate(PASSWORD_PATTERN, pswd)) {
+				return true;
+			}
+			else {
+				throw new InvalidPasswordException("Invalid password..!Try again");
+			}
 		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid Password, try again");
+			throw new InvalidPasswordException("Invalid password..!Try again");
 		}
-		return "INVALID";
-	}
-
-	public String validPasswordRule4(String pswd) throws Exception
-	{
-		String regex = "^[a-zA-Z0-9]{5,}[A-Z]{1}[0-9]{1}[@#!_]{1}[a-zA-Z0-9]$";
-		Pattern p = Pattern.compile(regex);
-		try
-		{
-			if(p.matcher(pswd).matches())
-				return "VALID";
-		} catch (Exception e) {
-			throw new InvalidUserDetailsException("Invalid Password, try again");
-		}
-		return "INVALID";
 	}
 }
